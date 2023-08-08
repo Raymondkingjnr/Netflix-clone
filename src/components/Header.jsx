@@ -1,14 +1,46 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../assets/logo.png";
+import { useDispatch, useSelector } from "react-redux";
+import { signIn } from "../feature/authSlice";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, isLoading, error } = useSelector((state) => state.auth);
+  const initailState = {
+    email: "",
+    password: "",
+  };
+
+  const [values, setValues] = useState(initailState);
   const [togglePassword, setTogglePassword] = useState(false);
 
   const handlePasword = () => {
     setTogglePassword(!togglePassword);
   };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleSignIn = async () => {
+    dispatch(signIn(values.email, values.password));
+  };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate("/netflix");
+      }, 2000);
+    }
+  }, [user]);
 
   return (
     <Wrapper>
@@ -29,9 +61,21 @@ const Header = () => {
           </p>
         </div>
         <div className="form">
-          <input type="email" name="email" placeholder="Email" />
+          <input
+            type="email"
+            value={values.email}
+            name="email"
+            placeholder="Email"
+            onChange={handleChange}
+          />
           {togglePassword && (
-            <input type="password" name="password" placeholder="password" />
+            <input
+              type="password"
+              value={values.password}
+              name="password"
+              placeholder="password"
+              onChange={handleChange}
+            />
           )}
           {!togglePassword && (
             <button onClick={handlePasword} className="toggle-password">
@@ -39,7 +83,14 @@ const Header = () => {
             </button>
           )}
         </div>
-        <button className="login-btn">Sign in</button>
+        <button
+          className="login-btn"
+          onClick={handleSignIn}
+          disabled={isLoading}
+        >
+          Sign in
+        </button>
+        {error && <p>{error}</p>}
       </div>
     </Wrapper>
   );

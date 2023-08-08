@@ -30,6 +30,19 @@ h4 {
   -webkit-box-shadow: -17px -21px 376px 101px rgba(0, 0, 0, 0.9) inset;
   -moz-box-shadow: -17px -21px 376px 101px rgba(0, 0, 0, 0.9) inset;
 }
+.sign-page {
+  background-image: url("./assets/background.jpg");
+  background-repeat: no-repeat;
+  /* filter: brightness(50%); */
+  object-fit: cover;
+  outline: none;
+  background-size: cover;
+  width: 100%;
+}
+.sign-page img {
+  width: 250px;
+  z-index: 1;
+}
 @media screen and (max-width: 600px) {
   .header {
     height: 100vh;
