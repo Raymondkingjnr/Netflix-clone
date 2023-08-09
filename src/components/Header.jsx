@@ -37,7 +37,7 @@ const Header = () => {
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate("/netflix");
+        navigate("/");
       }, 2000);
     }
   }, [user]);

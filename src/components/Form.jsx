@@ -1,5 +1,6 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
@@ -9,6 +10,7 @@ import { signUp } from "../feature/authSlice";
 
 const Forms = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user, isLoading, error } = useSelector((state) => state.auth);
 
   const initialState = {
@@ -27,9 +29,19 @@ const Forms = () => {
     }));
   };
 
-  const handleSingUp = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     dispatch(signUp(values.email, values.password, values.name));
   };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    }
+  }, [user]);
 
   return (
     <Wrapper>
@@ -76,7 +88,7 @@ const Forms = () => {
           <button
             type="button"
             className="sign-btn"
-            onClick={handleSingUp}
+            onClick={handleSubmit}
             disabled={isLoading}
           >
             Sign up
@@ -92,7 +104,7 @@ const Forms = () => {
         </article>
         <section>
           <h5>
-            Already a member? <Link to="/"> Sign In</Link>{" "}
+            Already a member? <Link to="/landing"> Sign In</Link>{" "}
           </h5>
           <p>
             This page is protected by Google reCAPTCHA to ensure you're not a
@@ -121,6 +133,10 @@ const Wrapper = styled.section`
   }
   section p {
     padding-top: 1.5rem;
+  }
+  .home-link {
+    text-decoration: none;
+    color: #fff;
   }
   main {
     max-width: 400px;
