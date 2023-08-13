@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, BrowserRouter, Outlet } from "react-router-dom";
-import { Home, Navbar, Movies, TvSeries } from "./pages/home";
-import { Error, ProtectedRoute, Signup, Landing } from "./pages";
+import { Home, Movies, TvSeries, MyList } from "./pages/home";
+import { Error, ProtectedRoute, Signup, Landing, Player } from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,7 +14,6 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Navbar />
               <Outlet />
             </ProtectedRoute>
           }
@@ -22,8 +21,9 @@ function App() {
           <Route index element={<Home />} />
           <Route exact path="/movies" element={<Movies />} />
           <Route exact path="/tv-series" element={<TvSeries />} />
+          <Route exact path="/my-list" element={<MyList />} />
         </Route>
-
+        <Route exact path="/player" element={<Player />} />
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/landing" element={<Landing />} />
         <Route exact path="*" element={<Error />} />
