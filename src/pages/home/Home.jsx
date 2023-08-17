@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import movieLogo from "../../assets/homeTitle.webp";
 import { styled } from "styled-components";
-
 import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import Navbar from "./Navbar";
@@ -9,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchMovies, getGenres } from "../../feature/moviesSlice";
+import { Slider } from "../../components";
 
 function Home() {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ function Home() {
   };
 
   const dispatch = useDispatch();
-  const { genresLoading } = useSelector((state) => state.netflex.genresLoading);
+  const { genresLoading, movies } = useSelector((state) => state.netflex);
 
   useEffect(() => {
     dispatch(getGenres());
@@ -28,6 +28,12 @@ function Home() {
   useEffect(() => {
     if (genresLoading) dispatch(fetchMovies({ type: "all" }));
   });
+
+  // useEffect(() => {
+  //   dispatch(fetchMovies());
+  // }, [dispatch]);
+
+  console.log(movies);
 
   return (
     <Wrapper>
@@ -52,6 +58,7 @@ function Home() {
           </div>
         </div>
       </div>
+      <Slider movies={movies} />
     </Wrapper>
   );
 }

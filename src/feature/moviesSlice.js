@@ -9,6 +9,89 @@ const initialState = {
   genres: [],
 };
 
+// export const getGenres = createAsyncThunk("netflix/genres", async () => {
+//   const {
+//     data: { genres },
+//   } = await axios(`${TMDB_BASE_URL}/genre/movie/list?api_key=${API_KEY}`);
+//   return genres;
+// });
+
+// const createArrayFromRawData = (array, moviesArray, genres) => {
+//   array.forEach((movie) => {
+//     const movieGenres = [];
+//     movie.genre_ids.forEach((genre) => {
+//       const name = genres.find(({ id }) => id === genre);
+//       if (name) movieGenres.push(name.name);
+//     });
+//     if (movie.backdrop_path) {
+//       moviesArray.push({
+//         id: movie.id,
+//         name: movie?.original_name ? movie.original_name : movie.original_title,
+//         image: movie.backdrop_path,
+//         genres: movieGenres.slice(0, 3),
+//       });
+//     }
+//   });
+// };
+
+/////////////
+
+// export const fetchMovies = createAsyncThunk(
+//   "netflix/trending",
+//   async (_, thunkAPI) => {
+//     const { getState } = thunkAPI;
+//     const { page, genres } = getState().netflex;
+
+//     try {
+//       const allResults = [];
+
+//       // Fetch data from 50 pages
+//       for (let i = 1; allResults.length < 50 && i < 10; i++) {
+//         const resp = await axios(
+//           `${TMDB_BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_watch_monetization_types=flatrate&with_genres=${genres}&page=${i}`
+//         );
+//         const { results } = resp.data;
+
+//         allResults.push(...results);
+//       }
+
+//       return allResults;
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
+// );
+
+// export const fetchMovies = createAsyncThunk(
+//   "netflix/trending",
+//   async (_, thunkAPI) => {
+//     const { getState } = thunkAPI;
+//     const { page, genres } = getState().netflex;
+
+//     try {
+//       const allResults = [];
+
+//       // Fetch data from 50 pages
+//       for (let i = 1; allResults.length < 50 && i < 10; i++) {
+//         const resp = await axios(
+//           `${TMDB_BASE_URL}/discover/movie?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_watch_monetization_types=flatrate&with_genres=${genres}&page=${i}`
+//         );
+//         const { results } = resp.data;
+
+//         allResults.push(...results);
+//       }
+
+//       // Call createArrayFromRawData to process the fetched data
+//       const processedMovies = [];
+//       createArrayFromRawData(allResults, processedMovies, genres);
+
+//       return processedMovies;
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
+// );
+
 export const getGenres = createAsyncThunk("netflix/genres", async () => {
   const {
     data: { genres },
@@ -17,50 +100,59 @@ export const getGenres = createAsyncThunk("netflix/genres", async () => {
 });
 
 const createArrayFromRawData = (array, moviesArray, genres) => {
-  console.log(array);
   array.forEach((movie) => {
     const movieGenres = [];
     movie.genre_ids.forEach((genre) => {
       const name = genres.find(({ id }) => id === genre);
       if (name) movieGenres.push(name.name);
     });
-
     if (movie.backdrop_path) {
       moviesArray.push({
         id: movie.id,
         name: movie?.original_name ? movie.original_name : movie.original_title,
         image: movie.backdrop_path,
         genres: movieGenres.slice(0, 3),
+        text: movie.overview,
+        date: movie.release_date,
       });
     }
   });
 };
 
-const getRawData = async (api, genres, paging) => {
-  const moviesArray = [];
-  for (let i = 1; moviesArray.length < 60 && i < 10; i++) {
-    const {
-      data: { results },
-    } = await axios.get(`${api} ${paging ? `&page=${i}` : ""}`);
-    createArrayFromRawData(results, moviesArray, genres);
-
-    return moviesArray;
-  }
-};
-
 export const fetchMovies = createAsyncThunk(
   "netflix/trending",
   async ({ type }, thunkAPI) => {
-    const {
-      netflix: { genres },
-    } = thunkAPI.getState();
+    const { getState, dispatch } = thunkAPI;
 
-    const data = getRawData(
-      `${TMDB_BASE_URL}/trending/${type}/week?api_key=${API_KEY}`,
-      genres,
-      true
-    );
-    console.log(data);
+    try {
+      // Dispatch the getGenres thunk to fetch genre information
+      await dispatch(getGenres);
+
+      const { page } = getState().netflex;
+
+      const allResults = [];
+
+      // Fetch data from 50 pages
+      for (let i = 1; allResults.length < 50 && i < 10; i++) {
+        const resp = await axios(
+          `${TMDB_BASE_URL}/trending/${type}/week?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_watch_monetization_types=flatrate&page=${i}`
+        );
+        const { results } = resp.data;
+
+        allResults.push(...results);
+      }
+
+      // Get the fetched genres from the Redux state
+      const genres = getState().netflex.genres;
+
+      // Call createArrayFromRawData to process the fetched data
+      const processedMovies = [];
+      createArrayFromRawData(allResults, processedMovies, genres);
+
+      return processedMovies;
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
@@ -84,8 +176,8 @@ const NetflixSlice = createSlice({
         state.genresLoading = true;
       })
       .addCase(fetchMovies.fulfilled, (state, action) => {
-        state.movies = action.payload;
         state.genresLoading = false;
+        state.movies = action.payload;
       })
       .addCase(fetchMovies.rejected, (state, { payload }) => {
         state.genresLoading = true;
