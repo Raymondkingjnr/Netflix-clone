@@ -2,10 +2,13 @@ import React from "react";
 import logoImg from "../../assets/logo.png";
 import { styled } from "styled-components";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logOutUser } from "../../feature/authSlice";
 import { useState } from "react";
 import { AiOutlineSearch, AiOutlinePoweroff } from "react-icons/ai";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { toggleSidebar } from "../../feature/moviesSlice";
+import Sidebar from "../../components/Sidebar";
 
 const links = [
   {
@@ -30,56 +33,83 @@ function Navbar({ isScrolled }) {
   const dispatch = useDispatch();
   const [search, setSearch] = useState(false);
   const [input, setInput] = useState(false);
+  const { isSidebarOpen } = useSelector((state) => state.netflex);
+
+  const toggle = () => {
+    dispatch(toggleSidebar());
+  };
   return (
     <Wrapper>
-      <nav className={`${isScrolled ? "scrolled" : ""} `}>
-        <main>
-          <img src={logoImg} alt="logo image" />
-          {links.map((item, index) => {
-            const { link, path } = item;
+      <div className="top-nav">
+        <nav className={`${isScrolled ? "scrolled" : ""} `}>
+          <main>
+            <img src={logoImg} alt="logo image" />
+            {links.map((item, index) => {
+              const { link, path } = item;
 
-            return (
-              <Link to={path} key={index} className="nav-links">
-                {link}
-              </Link>
-            );
-          })}
-        </main>
-        <article>
-          <div className={`search ${search ? "show-search" : "search"}`}>
-            <input
-              type="text"
-              placeholder="Search"
-              onMouseEnter={() => setInput(true)}
-              onMouseLeave={() => setInput(false)}
-              onBlur={() => {
-                setSearch(false);
-                setInput(flase);
-              }}
-            />
-            <button
-              onClick={() => setSearch(!search)}
-              onBlur={() => {
-                if (!input) setSearch(false);
-              }}
-            >
-              <AiOutlineSearch />
+              return (
+                <Link to={path} key={index} className="nav-links">
+                  {link}
+                </Link>
+              );
+            })}
+          </main>
+          <article>
+            <div className={`search ${search ? "show-search" : "search"}`}>
+              <input
+                type="text"
+                placeholder="Search"
+                onMouseEnter={() => setInput(true)}
+                onMouseLeave={() => setInput(false)}
+                onBlur={() => {
+                  setSearch(false);
+                  setInput(flase);
+                }}
+              />
+              <button
+                onClick={() => setSearch(!search)}
+                onBlur={() => {
+                  if (!input) setSearch(false);
+                }}
+              >
+                <AiOutlineSearch />
+              </button>
+            </div>
+            <button onClick={() => dispatch(logOutUser())}>
+              <AiOutlinePoweroff />
             </button>
-          </div>
-          <button onClick={() => dispatch(logOutUser())}>
-            <AiOutlinePoweroff />
-          </button>
-        </article>
-      </nav>
+          </article>
+        </nav>
+        <div className="open-nav">
+          <GiHamburgerMenu onClick={toggle} />
+        </div>
+
+        <div
+          className={`${isSidebarOpen ? "sidebar show-sidebar" : "sidebar"}`}
+        >
+          <Sidebar link={links} />;
+        </div>
+      </div>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.section`
   width: 100vw;
-  /* background: rgba(0, 0, 0, 0.8); */
   .scrolled {
+    transition: 0.3s ease-in-out;
     background-color: black;
+  }
+
+  .open-nav {
+    font-size: 35px;
+    font-weight: 900;
+    color: #e80606;
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    padding-right: 1rem;
+    display: none;
   }
   nav {
     display: flex;
@@ -91,6 +121,7 @@ const Wrapper = styled.section`
   }
   nav img {
     width: 100px;
+    object-fit: contain;
   }
   main {
     display: flex;
@@ -150,6 +181,30 @@ const Wrapper = styled.section`
     opacity: 1;
     visibility: visible;
     padding: 0.3rem;
+  }
+  .sidebar {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    top: 0%;
+    left: 0%;
+    position: fixed;
+    color: #fff;
+    transform: translate(-100%);
+    transition: all 0.3s linear;
+    padding: 35px;
+    z-index: 15;
+  }
+  .show-sidebar {
+    transform: translate(0);
+  }
+  @media screen and (max-width: 600px) {
+    nav {
+      display: none;
+    }
+    .open-nav {
+      display: block;
+    }
   }
 `;
 export default Navbar;

@@ -7,32 +7,8 @@ const initialState = {
   movies: [],
   genresLoading: false,
   genres: [],
+  isSidebarOpen: false,
 };
-
-// export const getGenres = createAsyncThunk("netflix/genres", async () => {
-//   const {
-//     data: { genres },
-//   } = await axios(`${TMDB_BASE_URL}/genre/movie/list?api_key=${API_KEY}`);
-//   return genres;
-// });
-
-// const createArrayFromRawData = (array, moviesArray, genres) => {
-//   array.forEach((movie) => {
-//     const movieGenres = [];
-//     movie.genre_ids.forEach((genre) => {
-//       const name = genres.find(({ id }) => id === genre);
-//       if (name) movieGenres.push(name.name);
-//     });
-//     if (movie.backdrop_path) {
-//       moviesArray.push({
-//         id: movie.id,
-//         name: movie?.original_name ? movie.original_name : movie.original_title,
-//         image: movie.backdrop_path,
-//         genres: movieGenres.slice(0, 3),
-//       });
-//     }
-//   });
-// };
 
 /////////////
 
@@ -114,6 +90,7 @@ const createArrayFromRawData = (array, moviesArray, genres) => {
         genres: movieGenres.slice(0, 3),
         text: movie.overview,
         date: movie.release_date,
+        posters: movie.poster_path,
       });
     }
   });
@@ -133,7 +110,7 @@ export const fetchMovies = createAsyncThunk(
       const allResults = [];
 
       // Fetch data from 50 pages
-      for (let i = 1; allResults.length < 50 && i < 10; i++) {
+      for (let i = 1; allResults.length < 100 && i < 10; i++) {
         const resp = await axios(
           `${TMDB_BASE_URL}/trending/${type}/week?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_watch_monetization_types=flatrate&page=${i}`
         );
@@ -159,6 +136,11 @@ export const fetchMovies = createAsyncThunk(
 const NetflixSlice = createSlice({
   name: "netflix",
   initialState,
+  reducers: {
+    toggleSidebar: (state) => {
+      state.isSidebarOpen = !state.isSidebarOpen;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getGenres.pending, (state) => {
@@ -185,5 +167,7 @@ const NetflixSlice = createSlice({
       });
   },
 });
+
+export const { toggleSidebar } = NetflixSlice.actions;
 
 export default NetflixSlice.reducer;

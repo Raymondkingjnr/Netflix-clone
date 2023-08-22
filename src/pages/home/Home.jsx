@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import movieLogo from "../../assets/homeTitle.webp";
+import movieLogo from "../../assets/strenger.png";
 import { styled } from "styled-components";
 import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -33,7 +33,7 @@ function Home() {
   //   dispatch(fetchMovies());
   // }, [dispatch]);
 
-  console.log(movies);
+  // console.log(movies);
 
   return (
     <Wrapper>
@@ -65,16 +65,18 @@ function Home() {
 
 const Wrapper = styled.section`
   width: 100vw;
+  background: #000;
   .container {
-    position: absolute;
-    bottom: 5rem;
-    z-index: 1;
+    /* position: absolute; */
+    padding-top: 20rem;
+    /* z-index: 1; */
     .logo {
-      margin-left: 4rem;
+      width: 100%;
+      /* margin-left: 1rem; */
     }
   }
   .buttons {
-    margin: 5rem;
+    margin-top: 2rem;
     gap: 2rem;
     button {
       font-size: 1.4rem;
@@ -85,6 +87,51 @@ const Wrapper = styled.section`
       padding-left: 2rem;
       padding-right: 2.4rem;
       border: transparent;
+      color: #fff;
+      background: red;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .container {
+      .logo {
+        margin-left: 0;
+      }
+      .logo img {
+        width: 350px;
+        margin-left: 0;
+      }
+    }
+
+    .buttons {
+      margin-left: 0;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      button {
+        font-size: 12px;
+        padding: 10px;
+      }
+    }
+  }
+  @media screen and (max-width: 400px) {
+    .container {
+      padding-top: 27rem;
+      .logo {
+        margin-left: 0;
+      }
+      .logo img {
+        width: 200px;
+        margin-left: 0;
+      }
+    }
+
+    .buttons {
+      margin-left: 0;
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      button {
+        font-size: 12px;
+        padding: 10px;
+      }
     }
   }
 `;

@@ -1,11 +1,11 @@
 import React from "react";
 import { useState } from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import Modal from "react-bootstrap/Modal";
-import { ModalBody, ModalHeader } from "react-bootstrap";
+import { Col, ModalBody, Row } from "react-bootstrap";
 import { RiThumbDownFill, RiThumbUpFill } from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 
 const Card = ({ movieData, isLiked = false }) => {
   const [show, setShow] = useState(false);
@@ -24,55 +24,78 @@ const Card = ({ movieData, isLiked = false }) => {
   return (
     <Wrapper>
       <img
-        src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
+        src={`https://image.tmdb.org/t/p/w500${movieData.posters}`}
         alt=""
         key={movieData.id}
         onClick={() => handleShow(movieData)}
+        className="img"
       />
 
-      <Modal show={show} onHide={handleClose} centered={true} size="xl">
-        <ModalBody
-          style={{
-            height: "80vh",
-            background: "#000",
-            color: "#fff",
-          }}
-        >
-          <ModalHeader closeButton></ModalHeader>
-
-          <main style={{ display: "flex", gap: "20px", marginTop: "5rem" }}>
-            <div className="modal-img">
-              <img
-                src={`https://image.tmdb.org/t/p/w500${movieData.image}`}
-                alt={movieData.title || movieData.name}
-                className="modal-img"
-              />
-            </div>
-            <div className="text">
-              <Modal.Title>
-                <h1 style={{ color: "gray" }}>{movieData.name}</h1>
-              </Modal.Title>
-              <p>{movieData.tag}</p>
-              <p>{movieData.text}</p>
-              <div className="control flex">
-                <RiThumbUpFill title="like" />
-                <RiThumbDownFill title="Dislike" />
-                {isLiked ? (
-                  <BsCheck title="Remove from List" />
-                ) : (
-                  <AiOutlinePlus title="Add to my List" />
-                )}
+      <Modal
+        show={show}
+        onHide={handleClose}
+        centered={true}
+        size="xl"
+        className="modal"
+      >
+        <div style={{ background: "#000", padding: "10px" }}>
+          <AiOutlineClose
+            onClick={handleClose}
+            style={{
+              fontSize: "2rem",
+              color: "#fff",
+              float: "right",
+              fontWeight: "800",
+              cursor: "pointer",
+              marginRight: "1rem",
+            }}
+          />
+        </div>
+        <ModalBody style={{ background: "#000", color: "#fff" }}>
+          <Row className="row">
+            <Col md={4}>
+              <div className="modal-img">
+                <img
+                  src={`https://image.tmdb.org/t/p/w500${movieData.posters}`}
+                  alt={movieData.title || movieData.name}
+                  className="modal-img"
+                />
               </div>
+            </Col>
+            <Col md={8}>
+              <div className="text">
+                <Modal.Title>
+                  <h1>{movieData.name}</h1>
+                </Modal.Title>
+                <p>{movieData.tag}</p>
+                <p>{movieData.text}</p>
+                <div className="control flex">
+                  <RiThumbUpFill title="like" style={{ cursor: "pointer" }} />
+                  <RiThumbDownFill
+                    title="Dislike"
+                    style={{ cursor: "pointer" }}
+                  />
+                  {isLiked ? (
+                    <BsCheck
+                      title="Remove from List"
+                      style={{ cursor: "pointer" }}
+                    />
+                  ) : (
+                    <AiOutlinePlus
+                      title="Add to my List"
+                      style={{ cursor: "pointer" }}
+                    />
+                  )}
+                </div>
 
-              <div className="genres flex">
-                <ul className="flex">
+                <ul className="genres">
                   {movieData.genres?.map((genre) => {
-                    return <li key={genre}>{genre}</li>;
+                    return <p key={genre}>{genre}</p>;
                   })}
                 </ul>
               </div>
-            </div>
-          </main>
+            </Col>
+          </Row>
         </ModalBody>
       </Modal>
     </Wrapper>
@@ -81,16 +104,30 @@ const Card = ({ movieData, isLiked = false }) => {
 
 const Wrapper = styled.section`
   background: #000;
-
-  .control {
-    display: flex;
-    gap: 5rem;
+  max-width: 300px;
+  margin: auto;
+  width: 300px;
+  cursor: pointer;
+  .img {
+    border-radius: 5px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
-  .text {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    border: 2px solid red;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  @media screen and (max-width: 600px) {
+    max-width: 150px;
+    margin: auto;
+    width: 150px;
+    border: 5px;
+  }
+  img {
+    width: 20%;
+    height: 20%;
   }
 `;
 
