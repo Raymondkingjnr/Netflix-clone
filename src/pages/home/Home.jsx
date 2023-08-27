@@ -19,19 +19,17 @@ function Home() {
   };
 
   const dispatch = useDispatch();
-  const { genresLoading, movies } = useSelector((state) => state.netflex);
+  const { genresLoading, movies, genres } = useSelector(
+    (state) => state.netflex
+  );
 
   useEffect(() => {
     dispatch(getGenres());
   }, []);
 
   useEffect(() => {
-    if (genresLoading) dispatch(fetchMovies({ type: "all" }));
-  });
-
-  // useEffect(() => {
-  //   dispatch(fetchMovies());
-  // }, [dispatch]);
+    if (genresLoading) dispatch(fetchMovies({ genres, type: "all" }));
+  }, [genresLoading]);
 
   // console.log(movies);
 
@@ -67,8 +65,8 @@ const Wrapper = styled.section`
   width: 100vw;
   background: #000;
   .container {
-    /* position: absolute; */
-    padding-top: 20rem;
+    position: absolute;
+    bottom: 10%;
     /* z-index: 1; */
     .logo {
       width: 100%;

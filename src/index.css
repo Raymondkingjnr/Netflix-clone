@@ -26,12 +26,17 @@ h4 {
 
 /* Modal start */
 
-.modal-img {
-  object-fit: contain;
-  width: 350px;
-}
 .modal-img img {
   border-radius: 5px;
+  object-fit: contain;
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  position: relative;
+  height: 100vh;
+  padding-top: 5rem;
 }
 
 .control {
@@ -40,19 +45,19 @@ h4 {
   padding-bottom: 1.5rem;
 }
 .genres {
+  position: relative;
+}
+.genre_text {
+  position: absolute;
+  left: 0;
   display: flex;
-
   gap: 1rem;
-  text-align: left;
 }
 .flex p {
   list-style: none;
   gap: 1.5rem;
 }
-.text {
-  padding-top: 2.5rem;
-  /* width: 400px; */
-}
+
 .text h1 {
   color: gray;
   font-size: 30px;
@@ -61,18 +66,38 @@ h4 {
   font-size: 20px;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1000px) {
+  .modal-img {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  .modal-img img {
+    width: 100vw;
+    position: absolute;
+    left: 0;
+  }
   .row {
     display: flex;
     flex-direction: column;
+    padding-top: 0;
+  }
+  .text {
+    position: absolute;
+    bottom: 25%;
+    left: 0;
+    padding-left: 2rem;
+    width: 80vw;
   }
 }
 
-@media screen and (max-width: 600px) {
-  .modal-img img {
+@media screen and (max-width: 760px) {
+  .row {
+    padding-left: 5rem;
+    padding-top: 0;
+  }
+  .text {
     width: 100%;
-    object-position: center;
-    margin-left: 10px;
+    padding-right: 1rem;
   }
   .text h1 {
     font-size: 25px;
@@ -83,20 +108,26 @@ h4 {
 }
 @media screen and (max-width: 400px) {
   .modal-img img {
-    width: 90%;
-    margin-left: 0;
+    width: 100%;
+  }
+  .text {
+    bottom: 20%;
   }
 }
 
-@media screen and (max-width: 330px) {
+@media screen and (max-width: 380px) {
   .modal-img img {
-    width: 80%;
+    width: 100%;
+  }
+  .text {
+    bottom: 15%;
   }
   .text h1 {
     font-size: 20px;
   }
   .text p {
     font-size: 12px;
+    line-height: 1.3rem;
   }
 }
 

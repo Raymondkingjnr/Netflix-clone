@@ -1,15 +1,26 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import Modal from "react-bootstrap/Modal";
+import axios from "axios";
 import { Col, ModalBody, Row } from "react-bootstrap";
 import { RiThumbDownFill, RiThumbUpFill } from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
+import { MOVIE_URL } from "../utils/constant";
+import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { removeFromLikedMovies } from "../feature/moviesSlice";
+//  import { onAuthStateChanged } from "firebase/auth";
+// import firebase from "../utils/firebase-config";
 
 const Card = ({ movieData, isLiked = false }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [email, setEmail] = useState(undefined);
 
   const handleClose = () => {
     setShow(false);
@@ -21,10 +32,37 @@ const Card = ({ movieData, isLiked = false }) => {
     setShow(true);
   };
 
+  //   setTimeout(() => {
+  //   navigate("/");
+  // }, 2000);
+
+  // onAuthStateChanged(firebase, (currentUser) => {
+  //   if (currentUser) {
+  //     setEmail(currentUser.email);
+  //   } else navigate("/landing");
+  // });
+
+  useEffect(() => {
+    if (user) {
+      setEmail(user.email);
+    } else navigate("/landing");
+  }, [user]);
+
+  const addtoList = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/user/add", {
+        email,
+        data: movieData,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Wrapper>
       <img
-        src={`https://image.tmdb.org/t/p/w500${movieData.posters}`}
+        src={`${MOVIE_URL}${movieData.posters}`}
         alt=""
         key={movieData.id}
         onClick={() => handleShow(movieData)}
@@ -36,14 +74,20 @@ const Card = ({ movieData, isLiked = false }) => {
         onHide={handleClose}
         centered={true}
         size="xl"
-        className="modal"
+        fullscreen="xl-down"
       >
-        <div style={{ background: "#000", padding: "10px" }}>
+        <div
+          style={{
+            background: "#000",
+            padding: "10px",
+            width: "100%",
+          }}
+        >
           <AiOutlineClose
             onClick={handleClose}
             style={{
               fontSize: "2rem",
-              color: "#fff",
+              color: "red",
               float: "right",
               fontWeight: "800",
               cursor: "pointer",
@@ -51,21 +95,26 @@ const Card = ({ movieData, isLiked = false }) => {
             }}
           />
         </div>
-        <ModalBody style={{ background: "#000", color: "#fff" }}>
+        <ModalBody
+          style={{
+            background: "#000",
+            color: "#fff",
+          }}
+        >
           <Row className="row">
             <Col md={4}>
               <div className="modal-img">
                 <img
-                  src={`https://image.tmdb.org/t/p/w500${movieData.posters}`}
+                  src={`${MOVIE_URL}${movieData.image}`}
                   alt={movieData.title || movieData.name}
                   className="modal-img"
                 />
               </div>
             </Col>
-            <Col md={8}>
+            <Col md={6}>
               <div className="text">
-                <Modal.Title>
-                  <h1>{movieData.name}</h1>
+                <Modal.Title style={{ display: "flex", gap: "1rem" }}>
+                  <h1>{movieData.name}</h1> <span>({movieData.date})</span>
                 </Modal.Title>
                 <p>{movieData.tag}</p>
                 <p>{movieData.text}</p>
@@ -79,19 +128,29 @@ const Card = ({ movieData, isLiked = false }) => {
                     <BsCheck
                       title="Remove from List"
                       style={{ cursor: "pointer" }}
+                      onClick={() =>
+                        dispatch(
+                          removeFromLikedMovies({
+                            movieId: movieData.id,
+                            email,
+                          })
+                        )
+                      }
                     />
                   ) : (
                     <AiOutlinePlus
                       title="Add to my List"
                       style={{ cursor: "pointer" }}
+                      onClick={addtoList}
                     />
                   )}
                 </div>
-
                 <ul className="genres">
-                  {movieData.genres?.map((genre) => {
-                    return <p key={genre}>{genre}</p>;
-                  })}
+                  <div className="genre_text">
+                    {movieData.genres?.map((genre) => {
+                      return <p key={genre}>{genre}</p>;
+                    })}
+                  </div>
                 </ul>
               </div>
             </Col>

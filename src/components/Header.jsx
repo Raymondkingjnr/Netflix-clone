@@ -8,6 +8,7 @@ import styled from "styled-components";
 
 const Header = () => {
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
   const { user, isLoading, error } = useSelector((state) => state.auth);
   const initailState = {

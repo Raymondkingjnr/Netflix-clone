@@ -9,25 +9,7 @@ import { AiOutlineSearch, AiOutlinePoweroff } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { toggleSidebar } from "../../feature/moviesSlice";
 import Sidebar from "../../components/Sidebar";
-
-const links = [
-  {
-    link: "Home",
-    path: "/",
-  },
-  {
-    link: "Tv Series",
-    path: "/tv-series",
-  },
-  {
-    link: "Movies",
-    path: "/movies",
-  },
-  {
-    link: "My List",
-    path: "/my-list",
-  },
-];
+import links from "../../utils/constant";
 
 function Navbar({ isScrolled }) {
   const dispatch = useDispatch();
@@ -87,7 +69,7 @@ function Navbar({ isScrolled }) {
         <div
           className={`${isSidebarOpen ? "sidebar show-sidebar" : "sidebar"}`}
         >
-          <Sidebar link={links} />;
+          <Sidebar />
         </div>
       </div>
     </Wrapper>
@@ -116,6 +98,7 @@ const Wrapper = styled.section`
     justify-content: space-between;
     padding: 20px;
     position: fixed;
+    top: 0;
     z-index: 2;
     width: 100%;
   }

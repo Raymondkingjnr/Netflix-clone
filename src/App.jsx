@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, BrowserRouter, Outlet } from "react-router-dom";
+import Navbar from "./pages/home/Navbar";
 import { Home, Movies, TvSeries, MyList } from "./pages/home";
 import { Error, ProtectedRoute, Signup, Landing, Player } from "./pages";
 import { ToastContainer } from "react-toastify";
@@ -14,7 +15,9 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Outlet />
+              <Outlet>
+                <Navbar />
+              </Outlet>
             </ProtectedRoute>
           }
         >
