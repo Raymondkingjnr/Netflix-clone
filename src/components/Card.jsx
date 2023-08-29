@@ -1,26 +1,22 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import Modal from "react-bootstrap/Modal";
-import axios from "axios";
 import { Col, ModalBody, Row } from "react-bootstrap";
 import { RiThumbDownFill, RiThumbUpFill } from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
 import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
 import { MOVIE_URL } from "../utils/constant";
-import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { removeFromLikedMovies } from "../feature/moviesSlice";
-//  import { onAuthStateChanged } from "firebase/auth";
-// import firebase from "../utils/firebase-config";
+import {
+  addLikedMoviesAsync,
+  deleteLikedMovieAsync,
+} from "../feature/moviesSlice";
 
-const Card = ({ movieData, isLiked = false }) => {
-  const navigate = useNavigate();
+const Card = ({ movieData, isLiked }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [email, setEmail] = useState(undefined);
 
   const handleClose = () => {
     setShow(false);
@@ -32,32 +28,28 @@ const Card = ({ movieData, isLiked = false }) => {
     setShow(true);
   };
 
-  //   setTimeout(() => {
-  //   navigate("/");
-  // }, 2000);
-
-  // onAuthStateChanged(firebase, (currentUser) => {
-  //   if (currentUser) {
-  //     setEmail(currentUser.email);
-  //   } else navigate("/landing");
-  // });
-
-  useEffect(() => {
-    if (user) {
-      setEmail(user.email);
-    } else navigate("/landing");
-  }, [user]);
-
-  const addtoList = async () => {
-    try {
-      await axios.post("http://localhost:5000/api/user/add", {
-        email,
-        data: movieData,
-      });
-    } catch (error) {
-      console.log(error);
+  const handleLike = () => {
+    if (isLiked) {
+      dispatch(deleteLikedMovieAsync(movieData.id));
+    } else {
+      dispatch(addLikedMoviesAsync(movieData));
     }
   };
+
+  // const handleLike = () => {
+  //   const movieToAdd = {
+  //     id: movieData.id, // Ensure the 'id' field is defined
+  //     title: movieData.title,
+  //     genre: movieData.genre,
+  //     image: movieData.image,
+  //   };
+
+  //   if (isLiked) {
+  //     dispatch(deleteLikedMovieAsync(movie.id));
+  //   } else {
+  //     dispatch(addLikedMoviesAsync(movieToAdd));
+  //   }
+  // };
 
   return (
     <Wrapper>
@@ -124,26 +116,19 @@ const Card = ({ movieData, isLiked = false }) => {
                     title="Dislike"
                     style={{ cursor: "pointer" }}
                   />
-                  {isLiked ? (
-                    <BsCheck
-                      title="Remove from List"
-                      style={{ cursor: "pointer" }}
-                      onClick={() =>
-                        dispatch(
-                          removeFromLikedMovies({
-                            movieId: movieData.id,
-                            email,
-                          })
-                        )
-                      }
-                    />
-                  ) : (
-                    <AiOutlinePlus
-                      title="Add to my List"
-                      style={{ cursor: "pointer" }}
-                      onClick={addtoList}
-                    />
-                  )}
+                  <button onClick={handleLike}>
+                    {isLiked ? (
+                      <BsCheck
+                        title="Remove from List"
+                        style={{ cursor: "pointer" }}
+                      />
+                    ) : (
+                      <AiOutlinePlus
+                        title="Add to my List"
+                        style={{ cursor: "pointer" }}
+                      />
+                    )}
+                  </button>
                 </div>
                 <ul className="genres">
                   <div className="genre_text">

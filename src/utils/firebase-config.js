@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBeNPT6gTaB2nc1uj-wSjNiONv7YKlaEBs",
   authDomain: "netflix-clone-c489c.firebaseapp.com",
@@ -13,4 +15,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const firebase = getAuth(app);
-export default firebase;
+const db = getFirestore(app);
+export { firebase, db };
+
+//const db = firebase.firestore();

@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_KEY, TMDB_BASE_URL } from "../utils/constant";
 import axios from "axios";
+import { addLikedMovie, fetchLikedMovies, deleteLikedMovie } from "../firebase";
 
 const initialState = {
   movies: [],
+  MyList: [],
   genresLoading: false,
   genres: [],
   isSidebarOpen: false,
@@ -135,25 +137,27 @@ export const fetchMoviesbyGenres = createAsyncThunk(
   }
 );
 
-export const getUserLikedMovies = createAsyncThunk(
-  "netflix/getliked",
-  async (email) => {
-    const {
-      data: { movies },
-    } = await axios.get(`http://localhost:5000/api/user/liked/${email}`);
-    return movies;
+export const fetchLikedMoviesAsync = createAsyncThunk(
+  "likedMovies/getlikedMovies",
+  async () => {
+    const likedMovies = await fetchLikedMovies();
+    return likedMovies;
   }
 );
-export const removeFromLikedMovies = createAsyncThunk(
-  "netflix/delete",
-  async (email, movieId) => {
-    const {
-      data: { movies },
-    } = await axios.put(`http://localhost:5000/api/user/delete`, {
-      email,
-      movieId,
-    });
-    return movies;
+export const addLikedMoviesAsync = createAsyncThunk(
+  "likedMovies/addLikedMovie",
+  async (movie, { dispatch }) => {
+    const movieId = await addLikedMovie(movie);
+    dispatch(fetchLikedMoviesAsync());
+    return movieId;
+  }
+);
+export const deleteLikedMovieAsync = createAsyncThunk(
+  "likedMovies/deleteLikedMovie",
+  async (movieId, { dispatch }) => {
+    await deleteLikedMovie(movieId);
+    dispatch(fetchLikedMoviesAsync());
+    return movieId;
   }
 );
 
@@ -181,14 +185,10 @@ const NetflixSlice = createSlice({
       // console.log(action);
       state.movies = action.payload;
       state.genresLoading = false;
-      // state.error = action.error.message;
     });
-    builder.addCase(getUserLikedMovies.fulfilled, (state, action) => {
-      state.movies = action.payload;
-      state.genresLoading = false;
-    });
-    builder.addCase(removeFromLikedMovies.fulfilled, (state, action) => {
-      state.movies = action.payload;
+    builder.addCase(fetchLikedMoviesAsync.fulfilled, (state, action) => {
+      // console.log(action);
+      state.MyList = action.payload;
       state.genresLoading = false;
     });
   },

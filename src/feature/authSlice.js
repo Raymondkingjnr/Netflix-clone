@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import firebase from "../utils/firebase-config";
+import { firebase } from "../utils/firebase-config";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
