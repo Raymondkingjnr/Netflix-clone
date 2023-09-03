@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import links from "../utils/constant";
 import { Link } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
+import { logOutUser } from "../feature/authSlice";
 
 const Sidebar = () => {
   const dispatch = useDispatch();
@@ -28,6 +29,9 @@ const Sidebar = () => {
               </Link>
             );
           })}
+          <button className="btn" onClick={() => dispatch(logOutUser())}>
+            Log Out
+          </button>
         </aside>
       </main>
     </Wrapper>
@@ -44,6 +48,10 @@ const Wrapper = styled.div`
     font-weight: 900;
     position: absolute;
     right: 3%;
+  }
+  .btn {
+    font-size: 15px;
+    background: red;
   }
   main {
     display: flex;

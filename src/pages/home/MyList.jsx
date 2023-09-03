@@ -25,10 +25,18 @@ const MyList = () => {
         <Navbar isScrolled={isScrolled} />
       </div>
       <div className="content colum">
-        <h1>My List</h1>
+        {/* <h1>My List</h1> */}
+        <h1>{MyList.length === 0 ? "List Is Empty" : "My List"}</h1>
         <div className="grid flex">
           {MyList.map((movie, index) => {
-            return <Card movieData={movie} index={index} key={movie.id} />;
+            return (
+              <Card
+                movieData={movie}
+                index={index}
+                key={movie.id}
+                isLiked={true}
+              />
+            );
           })}
         </div>
       </div>
@@ -38,9 +46,9 @@ const MyList = () => {
 
 const Wrapper = styled.div`
   background: #000;
-  /* height: 100vh; */
+  height: 100vh;
   .content {
-    padding-top: 13rem;
+    padding-top: 10rem;
     color: #fff;
     text-align: center;
   }
@@ -50,6 +58,12 @@ const Wrapper = styled.div`
   .grid {
     flex-wrap: wrap;
     gap: 2rem;
+    background: #000;
+  }
+  @media screen and (max-width: 600px) {
+    .content {
+      padding-top: 5rem;
+    }
   }
 `;
 

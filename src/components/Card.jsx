@@ -12,8 +12,9 @@ import {
   addLikedMoviesAsync,
   deleteLikedMovieAsync,
 } from "../feature/moviesSlice";
+// import { deleteLikedMovie } from "../firebase";
 
-const Card = ({ movieData, isLiked }) => {
+const Card = ({ movieData, isLiked = false }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -28,26 +29,22 @@ const Card = ({ movieData, isLiked }) => {
     setShow(true);
   };
 
-  const handleLike = () => {
-    if (isLiked) {
-      dispatch(deleteLikedMovieAsync(movieData.id));
-    } else {
-      dispatch(addLikedMoviesAsync(movieData));
-    }
-  };
+  // const handleLike = () => {
+  //   if (isLiked) {
+  //     dispatch(addLikedMoviesAsync(movieData));
+  //   } else {
+  //     dispatch(deleteLikedMovieAsync(movieData.id));
+  //   }
+  // };
 
   // const handleLike = () => {
-  //   const movieToAdd = {
-  //     id: movieData.id, // Ensure the 'id' field is defined
-  //     title: movieData.title,
-  //     genre: movieData.genre,
-  //     image: movieData.image,
-  //   };
-
+  //   console.log("Movie ID:", movieData.id); // Check if movieData.id is correct
   //   if (isLiked) {
-  //     dispatch(deleteLikedMovieAsync(movie.id));
+  //     console.log("Deleting liked movie...");
+  //     dispatch(deleteLikedMovieAsync(movieData.id));
   //   } else {
-  //     dispatch(addLikedMoviesAsync(movieToAdd));
+  //     console.log("Adding liked movie...");
+  //     dispatch(addLikedMoviesAsync(movieData));
   //   }
   // };
 
@@ -106,7 +103,7 @@ const Card = ({ movieData, isLiked }) => {
             <Col md={6}>
               <div className="text">
                 <Modal.Title style={{ display: "flex", gap: "1rem" }}>
-                  <h1>{movieData.name}</h1> <span>({movieData.date})</span>
+                  <h1>{movieData.name}</h1>{" "}
                 </Modal.Title>
                 <p>{movieData.tag}</p>
                 <p>{movieData.text}</p>
@@ -116,19 +113,25 @@ const Card = ({ movieData, isLiked }) => {
                     title="Dislike"
                     style={{ cursor: "pointer" }}
                   />
-                  <button onClick={handleLike}>
-                    {isLiked ? (
-                      <BsCheck
-                        title="Remove from List"
-                        style={{ cursor: "pointer" }}
-                      />
-                    ) : (
-                      <AiOutlinePlus
-                        title="Add to my List"
-                        style={{ cursor: "pointer" }}
-                      />
-                    )}
-                  </button>
+
+                  {isLiked ? (
+                    <BsCheck
+                      title="Remove from List"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => {
+                        // console.log("Deleting movie with ID:", movieData.newId);
+                        dispatch(
+                          deleteLikedMovieAsync(movieData.newId.toString())
+                        );
+                      }}
+                    />
+                  ) : (
+                    <AiOutlinePlus
+                      title="Add to my List"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => dispatch(addLikedMoviesAsync(movieData))}
+                    />
+                  )}
                 </div>
                 <ul className="genres">
                   <div className="genre_text">

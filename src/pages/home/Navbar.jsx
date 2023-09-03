@@ -138,6 +138,7 @@ const Wrapper = styled.section`
     justify-content: center;
     padding: 0.2rem;
     padding-left: 0%.5rem;
+    transform: 0.03s ease-in-out;
     button {
       background: transparent;
     }
@@ -158,9 +159,11 @@ const Wrapper = styled.section`
     border: 1px solid white;
     background: rgba(0, 0, 0, 0.6);
     border-radius: 5px;
+    transform: 0.03s ease-in-out;
   }
   .show-search input {
     width: 100%;
+    transform: 0.03s ease-in-out;
     opacity: 1;
     visibility: visible;
     padding: 0.3rem;

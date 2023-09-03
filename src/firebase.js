@@ -7,14 +7,11 @@ import {
   query,
   where,
 } from "firebase/firestore";
+
 import { db } from "./utils/firebase-config";
 import { toast } from "react-toastify";
 
 export const addLikedMovie = async (movie) => {
-  //   if (!movie.id || !movie.title || !movie.genre || !movie.date) {
-  //     console.error("Error adding movie: Invalid data");
-  //     return null;
-  //   }
   try {
     // Check if a movie with the same ID already exists
     const moviesCollection = collection(db, "likedMovies");
@@ -22,12 +19,8 @@ export const addLikedMovie = async (movie) => {
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.size === 0) {
-      const movieToAdd = {
-        id: movie.id,
-        date: movie.date || "",
-      };
       // If no movie with the same ID exists, add the movie
-      const docRef = await addDoc(moviesCollection, movieToAdd);
+      const docRef = await addDoc(moviesCollection, movie);
       toast.success("Movie Added To Your List");
       return docRef.id;
     } else {
@@ -40,20 +33,44 @@ export const addLikedMovie = async (movie) => {
   }
 };
 
-export const deleteLikedMovie = async (movieId) => {
+export const deleteLikedMovie = async (newId) => {
+  // console.log("Movie ID", newId);
   try {
-    await deleteDoc(doc(db, "likedMovies", movieId));
+    await deleteDoc(doc(db, "likedMovies", newId));
+    toast.success("Movie removed successfully");
   } catch (error) {
     console.error("Error deleting movie: ", error);
   }
 };
 
+// export const deleteLikedMovie = async (movieId) => {
+//   console.log("Movie ID", id);
+//   try {
+//     const movieRef = collection(db, "likedMovies", movieId);
+//     await movieRef.deleteDoc();
+//     toast.success("Movie deleted successfully");
+//   } catch (error) {
+//     console.error("Error deleting movie: ", error);
+//   }
+// };
+
+// export const deleteLikedMovie = async (id) => {
+//   console.log("Movie ID", id);
+//   try {
+//     const movieDoc = doc(db, "likedMovies", id);
+//     toast.success("Movie deleted successfully");
+//     await deleteDoc(movieDoc);
+//   } catch (error) {
+//     console.log("error deleting movie", error);
+//   }
+// };
+
 export const fetchLikedMovies = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "likedMovies"));
     const likedMovies = [];
-    querySnapshot.forEach((doc) => {
-      likedMovies.push({ id: doc.id, ...doc.data() });
+    querySnapshot.docs.map((doc) => {
+      likedMovies.push({ newId: doc.id, ...doc.data() });
     });
     // console.log(likedMovies);
     return likedMovies;
@@ -61,11 +78,3 @@ export const fetchLikedMovies = async () => {
     console.error("Error fetching movies: ", error);
   }
 };
-
-// try {
-//     const docRef = await addDoc(collection(db, "likedMovies"), movie);
-//     console.log("Document added with ID: ", docRef.id);
-//     return docRef.id;
-//   } catch (error) {
-//     console.error("Error adding movie: ", error);
-//   }

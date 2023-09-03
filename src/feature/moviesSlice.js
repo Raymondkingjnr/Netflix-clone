@@ -8,6 +8,7 @@ const initialState = {
   MyList: [],
   genresLoading: false,
   genres: [],
+  query: "",
   isSidebarOpen: false,
   error: "",
 };
@@ -37,37 +38,11 @@ const createArrayFromRawData = (array, moviesArray, genres) => {
         image: movie.backdrop_path,
         genres: movieGenres.slice(0, 3),
         text: movie.overview,
-        date: movie.release_date,
         posters: movie.poster_path,
       });
     }
   });
 };
-
-// const getRawData = async (api, genres, paging = false) => {
-//   const moviesArray = [];
-//   for (let i = 1; moviesArray.length < 60 && i < 10; i++) {
-//     const {
-//       data: { results },
-//     } = await axios.get(`${api}${paging ? `&page=${i}` : ""}`);
-//     createArrayFromRawData(results, moviesArray, genres);
-//   }
-//   return moviesArray;
-// };
-
-// export const fetchMovies = createAsyncThunk(
-//   "netflix/trending",
-//   async ({ type }, thunkAPI) => {
-//     const {
-//       netflix: { genres },
-//     } = thunkAPI.getState();
-//     return getRawData(
-//       `${TMDB_BASE_URL}/trending/${type}/week?api_key=${API_KEY}`,
-//       genres,
-//       true
-//     );
-//   }
-// );
 
 export const fetchMovies = createAsyncThunk(
   "netflix/trending",
@@ -85,7 +60,7 @@ export const fetchMovies = createAsyncThunk(
       // Fetch data from 50 pages
       for (let i = 1; allResults.length < 100 && i < 10; i++) {
         const resp = await axios(
-          `${TMDB_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_watch_monetization_types=flatrate&page=${i}`
+          `${TMDB_BASE_URL}/trending/${type}/day?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=true&with_watch_monetization_types=flatrate&page=${i}`
         );
         const { results } = resp.data;
 
@@ -116,7 +91,45 @@ export const fetchMoviesbyGenres = createAsyncThunk(
       // Fetch data from 50 pages
       for (let i = 1; allResults.length < 100 && i < 10; i++) {
         const resp = await axios(
-          `${TMDB_BASE_URL}/discover/${type}?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&with_watch_monetization_types=flatrate&page=${i}&with_genres=${genre}`
+          `${TMDB_BASE_URL}/discover/${type}?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=true&with_watch_monetization_types=flatrate&page=${i}&with_genres=${genre}`
+        );
+
+        const { results } = resp.data;
+
+        allResults.push(...results);
+      }
+
+      // Get the fetched genres from the Redux state
+      const genres = getState().netflex.genres;
+
+      // Call createArrayFromRawData to process the fetched data
+      const processedMovies = [];
+      createArrayFromRawData(allResults, processedMovies, genres);
+      return processedMovies;
+    } catch (error) {
+      return console.log(error);
+    }
+  }
+);
+
+//  ///// fetchSearch
+
+export const fetchMoviesbySearch = createAsyncThunk(
+  "netflix/fetchMoviesbySearch",
+  async ({ type }, thunkAPI) => {
+    const { getState, dispatch } = thunkAPI;
+    const query = getState().netflex.query;
+
+    try {
+      // Dispatch the getGenres thunk to fetch genre information
+      await dispatch(getGenres);
+
+      const allResults = [];
+
+      // Fetch data from 50 pages
+      for (let i = 1; allResults.length < 100 && i < 10; i++) {
+        const resp = await axios(
+          `${TMDB_BASE_URL}/search/${type}?api_key=${API_KEY}&language=en-US&sort_by=popularity.desc&include_adult=false&query=${query}include_video=false&with_watch_monetization_types=flatrate&page=${i}`
         );
 
         const { results } = resp.data;
@@ -144,6 +157,7 @@ export const fetchLikedMoviesAsync = createAsyncThunk(
     return likedMovies;
   }
 );
+
 export const addLikedMoviesAsync = createAsyncThunk(
   "likedMovies/addLikedMovie",
   async (movie, { dispatch }) => {
@@ -152,12 +166,19 @@ export const addLikedMoviesAsync = createAsyncThunk(
     return movieId;
   }
 );
+
 export const deleteLikedMovieAsync = createAsyncThunk(
   "likedMovies/deleteLikedMovie",
-  async (movieId, { dispatch }) => {
-    await deleteLikedMovie(movieId);
-    dispatch(fetchLikedMoviesAsync());
-    return movieId;
+  async (newId, { dispatch }) => {
+    try {
+      await deleteLikedMovie(newId);
+      dispatch(fetchLikedMoviesAsync());
+      // console.log("Deleting movie with ID:", newId, "was successful");
+      return newId;
+    } catch (error) {
+      console.error("E Deleting movie", error);
+      throw error;
+    }
   }
 );
 
@@ -170,6 +191,9 @@ const NetflixSlice = createSlice({
     },
     handleChange: (state, { payload: { name, value } }) => {
       state[name] = value;
+    },
+    setQuery: (state, action) => {
+      state.query = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -186,14 +210,26 @@ const NetflixSlice = createSlice({
       state.movies = action.payload;
       state.genresLoading = false;
     });
+    builder.addCase(fetchMoviesbySearch.fulfilled, (state, action) => {
+      // console.log(action);
+      state.movies = action.payload;
+      state.genresLoading = false;
+    });
     builder.addCase(fetchLikedMoviesAsync.fulfilled, (state, action) => {
       // console.log(action);
       state.MyList = action.payload;
       state.genresLoading = false;
     });
+    builder.addCase(deleteLikedMovieAsync.fulfilled, (state, action) => {
+      // Remove the deleted movie from the state
+      // console.log(action);
+      state.MyList = state.MyList.filter(
+        (movie) => movie.id !== action.payload
+      );
+    });
   },
 });
 
-export const { toggleSidebar, handleChange } = NetflixSlice.actions;
+export const { toggleSidebar, handleChange, setQuery } = NetflixSlice.actions;
 
 export default NetflixSlice.reducer;
