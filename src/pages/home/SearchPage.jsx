@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { styled } from "styled-components";
 import { Card } from "../../components";
 import { useDispatch, useSelector } from "react-redux";
+import Navbar from "./Navbar";
 import {
   fetchMoviesbySearch,
   getGenres,
@@ -14,7 +15,13 @@ import { Form } from "react-bootstrap";
 
 const SearchPage = () => {
   const [localSearch, setLocalSearch] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
   const dispatch = useDispatch();
+
+  window.onscroll = () => {
+    setIsScrolled(window.pageYOffset === 0 ? false : true);
+    return () => (window.onscroll = null);
+  };
 
   const { movies, genres, query, genresLoading } = useSelector(
     (state) => state.netflex
@@ -52,6 +59,9 @@ const SearchPage = () => {
 
   return (
     <Wrapper>
+      <div className="navbar">
+        <Navbar isScrolled={isScrolled} />
+      </div>
       <form onSubmit={searchMovies}>
         <Form.Control
           type="text"
@@ -75,9 +85,8 @@ const SearchPage = () => {
 const Wrapper = styled.section`
   background: #000;
   height: 100vh;
-  padding-top: 5rem;
   .search_input {
-    margin: 2rem auto;
+    margin: 6rem auto;
     max-width: 500px;
     font-family: "acme";
     padding: 0.5rem;

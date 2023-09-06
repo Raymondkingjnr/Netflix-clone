@@ -28,8 +28,6 @@ function Home() {
 
   const { user } = useSelector((state) => state.auth);
 
-  console.log(user);
-
   useEffect(() => {
     dispatch(getGenres());
   }, []);

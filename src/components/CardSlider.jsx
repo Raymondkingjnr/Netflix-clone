@@ -25,8 +25,8 @@ const CardSlider = ({ data, title }) => {
   return (
     <Wrapper
       className="flex column"
-      onMouseEnter={() => setShowControls(true)}
-      onMouseLeave={() => setShowControls(false)}
+      // onMouseEnter={() => setShowControls(true)}
+      // onMouseLeave={() => setShowControls(false)}
     >
       <h1>{title}</h1>
       <div className="wrapper">
