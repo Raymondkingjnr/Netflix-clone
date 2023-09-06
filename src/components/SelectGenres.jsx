@@ -23,8 +23,8 @@ const SelectGenres = ({ genres, type }) => {
       >
         {genres?.map((genre, index) => {
           return (
-            <option value={genre.id} key={index}>
-              <p>{genre.name}</p>
+            <option value={genre.id} key={genre.id} index={index}>
+              {genre.name}
             </option>
           );
         })}

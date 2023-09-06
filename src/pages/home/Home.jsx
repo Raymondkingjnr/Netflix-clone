@@ -12,16 +12,23 @@ import { Slider } from "../../components";
 
 function Home() {
   const navigate = useNavigate();
+
+  // Navbar config
   const [isScrolled, setIsScrolled] = useState(false);
   window.onscroll = () => {
     setIsScrolled(window.pageYOffset === 0 ? false : true);
     return () => (window.onscroll = null);
   };
+  // Navbar config ends.
 
   const dispatch = useDispatch();
   const { genresLoading, movies, genres } = useSelector(
     (state) => state.netflex
   );
+
+  const { user } = useSelector((state) => state.auth);
+
+  console.log(user);
 
   useEffect(() => {
     dispatch(getGenres());

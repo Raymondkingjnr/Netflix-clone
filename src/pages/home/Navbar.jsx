@@ -1,10 +1,10 @@
 import React from "react";
 import logoImg from "../../assets/logo.png";
 import { styled } from "styled-components";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logOutUser } from "../../feature/authSlice";
-import { useState } from "react";
+// import { useState } from "react";
 import { AiOutlineSearch, AiOutlinePoweroff } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { toggleSidebar } from "../../feature/moviesSlice";
@@ -13,8 +13,8 @@ import links from "../../utils/constant";
 
 function Navbar({ isScrolled }) {
   const dispatch = useDispatch();
-  const [search, setSearch] = useState(false);
-  const [input, setInput] = useState(false);
+  // const [search, setSearch] = useState(false);
+  // const [input, setInput] = useState(false);
   const { isSidebarOpen } = useSelector((state) => state.netflex);
 
   const toggle = () => {
@@ -37,33 +37,20 @@ function Navbar({ isScrolled }) {
             })}
           </main>
           <article>
-            <div className={`search ${search ? "show-search" : "search"}`}>
-              <input
-                type="text"
-                placeholder="Search"
-                onMouseEnter={() => setInput(true)}
-                onMouseLeave={() => setInput(false)}
-                onBlur={() => {
-                  setSearch(false);
-                  setInput(flase);
-                }}
-              />
-              <button
-                onClick={() => setSearch(!search)}
-                onBlur={() => {
-                  if (!input) setSearch(false);
-                }}
-              >
-                <AiOutlineSearch />
-              </button>
-            </div>
+            <Link to="/search" className="search">
+              <AiOutlineSearch />
+            </Link>
             <button onClick={() => dispatch(logOutUser())}>
               <AiOutlinePoweroff />
             </button>
           </article>
         </nav>
         <div className="open-nav">
-          <GiHamburgerMenu onClick={toggle} />
+          <Link to="/search" className="search">
+            <AiOutlineSearch />
+          </Link>
+
+          <GiHamburgerMenu onClick={toggle} className="toggle" />
         </div>
 
         <div
@@ -72,6 +59,7 @@ function Navbar({ isScrolled }) {
           <Sidebar />
         </div>
       </div>
+      <Outlet />
     </Wrapper>
   );
 }
@@ -84,14 +72,26 @@ const Wrapper = styled.section`
   }
 
   .open-nav {
-    font-size: 35px;
-    font-weight: 900;
-    color: #e80606;
     position: absolute;
     z-index: 1;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
     right: 0;
     padding-right: 1rem;
-    display: none;
+    padding-top: 1rem;
+    display: flex;
+    visibility: hidden;
+  }
+  .toggle {
+    font-size: 25px;
+    font-weight: 900;
+    color: #e80606;
+  }
+  button {
+    background: transparent;
+    color: red;
+    font-size: 25px;
   }
   nav {
     display: flex;
@@ -112,6 +112,8 @@ const Wrapper = styled.section`
   }
   article {
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 20px;
   }
   .nav-links {
@@ -121,52 +123,14 @@ const Wrapper = styled.section`
     font-family: "acme";
     font-size: 25px;
   }
-  button {
-    background: transparent;
-    border: transparent;
-    outline: none;
-    color: #fff;
-    font-weight: bolder;
-    font-weight: "acme";
-    font-size: 1.4rem;
-  }
+
   .search {
-    display: flex;
-    flex: 0 0 auto;
-    gap: 0.4rem;
+    color: #fff;
     align-items: center;
     justify-content: center;
     padding: 0.2rem;
     padding-left: 0%.5rem;
-    transform: 0.03s ease-in-out;
-    button {
-      background: transparent;
-    }
-    input {
-      width: 0;
-      visibility: hidden;
-      opacity: 0;
-      transform: 0.03s ease-in-out;
-      background: transparent;
-      border: transparent;
-      color: #fff;
-      &:focus {
-        outline: none;
-      }
-    }
-  }
-  .show-search {
-    border: 1px solid white;
-    background: rgba(0, 0, 0, 0.6);
-    border-radius: 5px;
-    transform: 0.03s ease-in-out;
-  }
-  .show-search input {
-    width: 100%;
-    transform: 0.03s ease-in-out;
-    opacity: 1;
-    visibility: visible;
-    padding: 0.3rem;
+    font-size: 26px;
   }
   .sidebar {
     width: 100%;
@@ -180,6 +144,7 @@ const Wrapper = styled.section`
     transition: all 0.3s linear;
     padding: 35px;
     z-index: 15;
+    display: none;
   }
   .show-sidebar {
     transform: translate(0);
@@ -189,6 +154,9 @@ const Wrapper = styled.section`
       display: none;
     }
     .open-nav {
+      visibility: visible;
+    }
+    .sidebar {
       display: block;
     }
   }

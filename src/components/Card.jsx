@@ -5,48 +5,81 @@ import Modal from "react-bootstrap/Modal";
 import { Col, ModalBody, Row } from "react-bootstrap";
 import { RiThumbDownFill, RiThumbUpFill } from "react-icons/ri";
 import { BsCheck } from "react-icons/bs";
-import { AiOutlineClose, AiOutlinePlus } from "react-icons/ai";
-import { MOVIE_URL } from "../utils/constant";
+import {
+  AiOutlineClose,
+  AiOutlinePlus,
+  AiOutlineYoutube,
+} from "react-icons/ai";
+import { MOVIE_URL, TMDB_BASE_URL } from "../utils/constant";
 import { useSelector, useDispatch } from "react-redux";
+import Youtube from "react-youtube";
 import {
   addLikedMoviesAsync,
   deleteLikedMovieAsync,
 } from "../feature/moviesSlice";
+import axios from "axios";
 // import { deleteLikedMovie } from "../firebase";
 
 const Card = ({ movieData, isLiked = false }) => {
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectMovie, setSelectMovie] = useState(null);
+  const [type, set_type] = useState(0);
+  const [playTrailer, setPlayTrailer] = useState(false);
+
+  const fetchmovie = async (id) => {
+    try {
+      const { data } = await axios.get(
+        `${TMDB_BASE_URL}/${type ? "tv" : "movie"}/${id}?api_key=${
+          import.meta.env.VITE_API_KEY
+        }&append_to_response=videos`
+      );
+      return data;
+    } catch (error) {
+      console.log("Error getting movie", error);
+    }
+  };
 
   const handleClose = () => {
     setShow(false);
-    setSelectedItem(null); // Clear the selected item when the modal is closed
+    setSelectMovie(null); // Clear the selected item when the modal is closed
   };
 
-  const handleShow = (item) => {
-    setSelectedItem(item); // Set the selected item when the button is clicked
+  const handleOpen = async (movie) => {
+    const data = await fetchmovie(movie.id);
+    setSelectMovie(data); // Set the selected item when the button is clicked
     setShow(true);
   };
 
-  // const handleLike = () => {
-  //   if (isLiked) {
-  //     dispatch(addLikedMoviesAsync(movieData));
-  //   } else {
-  //     dispatch(deleteLikedMovieAsync(movieData.id));
-  //   }
-  // };
+  const renderTrailer = () => {
+    if (selectMovie?.videos && selectMovie?.videos?.results) {
+      const trailer = selectMovie.videos.results.find(
+        (vid) => vid.name === "Official Trailer" || "New Trailer"
+      );
 
-  // const handleLike = () => {
-  //   console.log("Movie ID:", movieData.id); // Check if movieData.id is correct
-  //   if (isLiked) {
-  //     console.log("Deleting liked movie...");
-  //     dispatch(deleteLikedMovieAsync(movieData.id));
-  //   } else {
-  //     console.log("Adding liked movie...");
-  //     dispatch(addLikedMoviesAsync(movieData));
-  //   }
-  // };
+      if (trailer) {
+        return (
+          <Youtube
+            videoId={trailer.key}
+            className="movie"
+            opts={{
+              width: "100%",
+              height: "100%",
+              playerVars: {
+                enablejsapi: 1,
+              },
+            }}
+          />
+        );
+      }
+    }
+
+    return "Movie Trailer Not Available";
+  };
+
+  // || "New Trailer" || "Teaser Trailer" <Youtube videoId={trailer.key} />;
+
+  // console.log(selectMovie);
 
   return (
     <Wrapper>
@@ -54,7 +87,7 @@ const Card = ({ movieData, isLiked = false }) => {
         src={`${MOVIE_URL}${movieData.posters}`}
         alt=""
         key={movieData.id}
-        onClick={() => handleShow(movieData)}
+        onClick={() => handleOpen(movieData)}
         className="img"
       />
 
@@ -106,7 +139,7 @@ const Card = ({ movieData, isLiked = false }) => {
                   <h1>{movieData.name}</h1>{" "}
                 </Modal.Title>
                 <p>{movieData.tag}</p>
-                <p>{movieData.text}</p>
+                <p>{movieData?.text?.substring(0, 500)}</p>
                 <div className="control flex">
                   <RiThumbUpFill title="like" style={{ cursor: "pointer" }} />
                   <RiThumbDownFill
@@ -140,6 +173,17 @@ const Card = ({ movieData, isLiked = false }) => {
                     })}
                   </div>
                 </ul>
+
+                <button
+                  className="play_btn"
+                  onClick={() => setPlayTrailer(true)}
+                >
+                  Play Trailer{" "}
+                  <span>
+                    <AiOutlineYoutube className="play_icon" />
+                  </span>
+                </button>
+                {playTrailer && selectMovie?.videos ? renderTrailer() : null}
               </div>
             </Col>
           </Row>

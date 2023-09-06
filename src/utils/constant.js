@@ -1,4 +1,4 @@
-export const API_KEY = "14432269a4ec977223dd063547746aa7";
+// export const API_KEY = "import.meta.env.VITE_API_KEY";
 export const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 export const MOVIE_URL = "https://image.tmdb.org/t/p/w500/";
 

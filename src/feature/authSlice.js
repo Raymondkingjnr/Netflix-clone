@@ -61,7 +61,7 @@ export const signIn = (email, password) => async (dispatch) => {
 export const signUp = (email, password, name) => async (dispatch) => {
   //   dispatch(setLoading(true));
   if (!email || !password || !name) {
-    toast.error("please fill all input");
+    toast.error("incomplete form");
     return;
   }
   createUserWithEmailAndPassword(firebase, email, password, name)

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import Navbar from "./Navbar";
+// import Navbar from "./Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchLikedMoviesAsync } from "../../feature/moviesSlice";
 import { Card } from "../../components";
 
 const MyList = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
+  // const [isScrolled, setIsScrolled] = useState(false);
   const dispatch = useDispatch();
   const { MyList } = useSelector((state) => state.netflex);
 
@@ -14,16 +14,16 @@ const MyList = () => {
     dispatch(fetchLikedMoviesAsync());
   }, [dispatch]);
 
-  window.onscroll = () => {
-    setIsScrolled(window.pageYOffset === 0 ? false : true);
-    return () => (window.onscroll = null);
-  };
+  // window.onscroll = () => {
+  //   setIsScrolled(window.pageYOffset === 0 ? false : true);
+  //   return () => (window.onscroll = null);
+  // };
 
   return (
     <Wrapper>
-      <div className="navbar">
+      {/* <div className="navbar">
         <Navbar isScrolled={isScrolled} />
-      </div>
+      </div> */}
       <div className="content colum">
         {/* <h1>My List</h1> */}
         <h1>{MyList.length === 0 ? "List Is Empty" : "My List"}</h1>

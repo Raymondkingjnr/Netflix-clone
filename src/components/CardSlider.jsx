@@ -1,26 +1,26 @@
 import React from "react";
 import Card from "./Card";
 import { styled } from "styled-components";
-import { useState } from "react";
-import { useRef } from "react";
-import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
+// import { useState } from "react";
+// import { useRef } from "react";
+// import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 
 const CardSlider = ({ data, title }) => {
-  const [showControls, setShowControls] = useState(false);
+  // const [showControls, setShowControls] = useState(false);
   // const [sliderPostion, setSliderPosition] = useState(0);
 
-  const scrollRef = useRef(null);
+  // const scrollRef = useRef(null);
 
-  const scroll = (direction) => {
-    const { current } = scrollRef;
-    console.log(current, direction);
+  // const scroll = (direction) => {
+  //   const { current } = scrollRef;
+  //   console.log(current, direction);
 
-    if (direction === "left") {
-      current.scrollLeft -= 300;
-    } else {
-      current.scrollLeft += 300;
-    }
-  };
+  //   if (direction === "left") {
+  //     current.scrollLeft -= 300;
+  //   } else {
+  //     current.scrollLeft += 300;
+  //   }
+  // };
 
   return (
     <Wrapper
@@ -30,7 +30,7 @@ const CardSlider = ({ data, title }) => {
     >
       <h1>{title}</h1>
       <div className="wrapper">
-        <div
+        {/* <div
           className={`slider-action left ${
             !showControls ? "none" : ""
           } flex j-center a-center`}
@@ -40,13 +40,13 @@ const CardSlider = ({ data, title }) => {
             onClick={() => scroll("left")}
             style={{ color: "#Fff" }}
           />
-        </div>
-        <div className="flex slider" ref={scrollRef}>
+        </div> */}
+        <div className="flex slider">
           {data?.map((movie, index) => {
             return <Card movieData={movie} index={index} key={movie.id} />;
           })}
         </div>
-        <div
+        {/* <div
           className={`slider-action right ${
             !showControls ? "none" : ""
           } flex j-center a-center`}
@@ -56,7 +56,7 @@ const CardSlider = ({ data, title }) => {
             onClick={() => scroll("right")}
             style={{ color: "#Fff" }}
           />
-        </div>
+        </div> */}
       </div>
     </Wrapper>
   );

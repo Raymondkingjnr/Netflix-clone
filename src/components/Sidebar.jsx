@@ -52,6 +52,8 @@ const Wrapper = styled.div`
   .btn {
     font-size: 15px;
     background: red;
+    color: #fff;
+    font-family: "acme";
   }
   main {
     display: flex;
