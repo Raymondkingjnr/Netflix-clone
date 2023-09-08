@@ -26,7 +26,7 @@ function Home() {
     (state) => state.netflex
   );
 
-  const { user } = useSelector((state) => state.auth);
+  // const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(getGenres());

@@ -45,7 +45,7 @@ function Navbar({ isScrolled }) {
             </button>
           </article>
         </nav>
-        <div className="open-nav">
+        <div className={`${isScrolled ? "open-nav scrolled" : "open-nav"}`}>
           <Link to="/search" className="search">
             <AiOutlineSearch />
           </Link>
@@ -74,19 +74,21 @@ const Wrapper = styled.section`
   .open-nav {
     position: absolute;
     z-index: 1;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-end;
+    justify-content: flex-end;
     gap: 20px;
     right: 0;
     padding-right: 1rem;
     padding-top: 1rem;
     display: flex;
     visibility: hidden;
+    width: 100%;
   }
   .toggle {
     font-size: 25px;
     font-weight: 900;
     color: #e80606;
+    margin-bottom: 0.8rem;
   }
   button {
     background: transparent;
@@ -132,6 +134,9 @@ const Wrapper = styled.section`
     padding-left: 0%.5rem;
     font-size: 26px;
   }
+  .open-nav .search {
+    padding-bottom: 0.6rem;
+  }
   .sidebar {
     width: 100%;
     height: 100%;
@@ -155,6 +160,9 @@ const Wrapper = styled.section`
     }
     .open-nav {
       visibility: visible;
+      position: fixed;
+      top: 0;
+      z-index: 2;
     }
     .sidebar {
       display: block;

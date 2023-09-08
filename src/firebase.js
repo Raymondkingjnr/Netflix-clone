@@ -10,6 +10,7 @@ import {
 
 import { db } from "./utils/firebase-config";
 import { toast } from "react-toastify";
+// import { useSelector } from "react-redux";
 
 export const addLikedMovie = async (movie) => {
   try {
@@ -43,31 +44,9 @@ export const deleteLikedMovie = async (newId) => {
   }
 };
 
-// export const deleteLikedMovie = async (movieId) => {
-//   console.log("Movie ID", id);
-//   try {
-//     const movieRef = collection(db, "likedMovies", movieId);
-//     await movieRef.deleteDoc();
-//     toast.success("Movie deleted successfully");
-//   } catch (error) {
-//     console.error("Error deleting movie: ", error);
-//   }
-// };
-
-// export const deleteLikedMovie = async (id) => {
-//   console.log("Movie ID", id);
-//   try {
-//     const movieDoc = doc(db, "likedMovies", id);
-//     toast.success("Movie deleted successfully");
-//     await deleteDoc(movieDoc);
-//   } catch (error) {
-//     console.log("error deleting movie", error);
-//   }
-// };
-
 export const fetchLikedMovies = async () => {
   try {
-    const querySnapshot = await getDocs(collection(db, "likedMovies"));
+    const querySnapshot = await getDocs(collection(db, `likedMovies`));
     const likedMovies = [];
     querySnapshot.docs.map((doc) => {
       likedMovies.push({ newId: doc.id, ...doc.data() });

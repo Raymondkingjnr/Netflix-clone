@@ -21,6 +21,10 @@ import axios from "axios";
 // import { deleteLikedMovie } from "../firebase";
 
 const Card = ({ movieData, isLiked = false }) => {
+  // const { user } = useSelector((state) => state.auth);
+
+  // const userId = user.uid;
+
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [selectMovie, setSelectMovie] = useState(null);

@@ -6,6 +6,10 @@ import { fetchLikedMoviesAsync } from "../../feature/moviesSlice";
 import { Card } from "../../components";
 
 const MyList = () => {
+  // const { user } = useSelector((state) => state.auth);
+
+  // const  = user.uid;
+
   const [isScrolled, setIsScrolled] = useState(false);
   const dispatch = useDispatch();
   const { MyList } = useSelector((state) => state.netflex);
@@ -26,9 +30,9 @@ const MyList = () => {
       </div>
       <div className="content colum">
         {/* <h1>My List</h1> */}
-        <h1>{MyList.length === 0 ? "List Is Empty" : "My List"}</h1>
+        <h1>{MyList?.length === 0 ? "List Is Empty" : "My List"}</h1>
         <div className="grid flex">
-          {MyList.map((movie, index) => {
+          {MyList?.map((movie, index) => {
             return (
               <Card
                 movieData={movie}
