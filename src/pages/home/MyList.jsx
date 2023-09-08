@@ -38,7 +38,7 @@ const MyList = () => {
                 movieData={movie}
                 index={index}
                 key={movie.id}
-                isLiked={true}
+                // isLiked={true}
               />
             );
           })}

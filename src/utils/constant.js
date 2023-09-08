@@ -16,9 +16,9 @@ const links = [
     link: "Movies",
     path: "/movies",
   },
-  {
-    link: "My List",
-    path: "/my-list",
-  },
+  // {
+  //   link: "My List",
+  //   path: "/my-list",
+  // },
 ];
 export default links;

@@ -3,29 +3,27 @@ import { useState } from "react";
 import styled from "styled-components";
 import Modal from "react-bootstrap/Modal";
 import { Col, ModalBody, Row } from "react-bootstrap";
-import { RiThumbDownFill, RiThumbUpFill } from "react-icons/ri";
-import { BsCheck } from "react-icons/bs";
+// import { RiThumbDownFill, RiThumbUpFill } from "react-icons/ri";
+// import { BsCheck } from "react-icons/bs";
+// import { BiSolidError } from "react-icons/bi";
 import {
   AiOutlineClose,
-  AiOutlinePlus,
+  // AiOutlinePlus,
   AiOutlineYoutube,
 } from "react-icons/ai";
 import { MOVIE_URL, TMDB_BASE_URL } from "../utils/constant";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import Youtube from "react-youtube";
-import {
-  addLikedMoviesAsync,
-  deleteLikedMovieAsync,
-} from "../feature/moviesSlice";
+// import {
+//   addLikedMoviesAsync,
+//   deleteLikedMovieAsync,
+// } from "../feature/moviesSlice";
 import axios from "axios";
-// import { deleteLikedMovie } from "../firebase";
-
-const Card = ({ movieData, isLiked = false }) => {
+//isLiked = false
+const Card = ({ movieData }) => {
   // const { user } = useSelector((state) => state.auth);
 
-  // const userId = user.uid;
-
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [selectMovie, setSelectMovie] = useState(null);
   const [type, set_type] = useState(0);
@@ -144,7 +142,7 @@ const Card = ({ movieData, isLiked = false }) => {
                 </Modal.Title>
                 <p>{movieData.tag}</p>
                 <p>{movieData?.text?.substring(0, 500)}</p>
-                <div className="control flex">
+                {/* <div className="control flex">
                   <RiThumbUpFill title="like" style={{ cursor: "pointer" }} />
                   <RiThumbDownFill
                     title="Dislike"
@@ -169,7 +167,7 @@ const Card = ({ movieData, isLiked = false }) => {
                       onClick={() => dispatch(addLikedMoviesAsync(movieData))}
                     />
                   )}
-                </div>
+                </div> */}
                 <ul className="genres">
                   <div className="genre_text">
                     {movieData.genres?.map((genre) => {

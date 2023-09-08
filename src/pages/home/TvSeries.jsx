@@ -41,6 +41,9 @@ const TvSeries = () => {
       <div className="navbar">
         <Navbar isScrolled={isScrolled} />
       </div>
+      <div className="title">
+        <h2>Tv Series:</h2>
+      </div>
       <div className="data">
         <SelectGenres genres={genres} type="tv" />
         {movies?.length ? <Slider movies={movies} /> : <Empty />}
@@ -52,7 +55,14 @@ const TvSeries = () => {
 const Wrapper = styled.section`
   background: #000;
   .data {
-    padding-top: 8rem;
+    padding-top: 2rem;
+  }
+  .title {
+    text-align: center;
+  }
+  .title h2 {
+    color: #fff;
+    padding-top: 5rem;
   }
 `;
 

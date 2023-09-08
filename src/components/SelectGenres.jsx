@@ -37,6 +37,7 @@ const Select = styled.section`
   /* margin-left: 4rem; */
   max-width: 200px;
   margin: auto;
+
   select {
     cursor: pointer;
     width: 100%;
