@@ -78,8 +78,9 @@ const Wrapper = styled.section`
     justify-content: flex-end;
     gap: 20px;
     right: 0;
-    padding-right: 1rem;
+    padding-right: 2rem;
     padding-top: 1rem;
+    padding-left: 2rem;
     display: flex;
     visibility: hidden;
     width: 100%;
@@ -98,7 +99,11 @@ const Wrapper = styled.section`
   nav {
     display: flex;
     justify-content: space-between;
-    padding: 20px;
+    align-items: center;
+    padding-left: 2.5rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     position: fixed;
     top: 0;
     z-index: 2;
@@ -131,7 +136,7 @@ const Wrapper = styled.section`
     align-items: center;
     justify-content: center;
     padding: 0.2rem;
-    padding-left: 0%.5rem;
+    padding-left: 0.5rem;
     font-size: 26px;
   }
   .open-nav .search {

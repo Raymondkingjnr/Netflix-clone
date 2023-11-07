@@ -76,7 +76,7 @@ const Card = ({ movieData }) => {
       }
     }
 
-    return "Movie Trailer Not Available";
+    return "Trailer Not Available";
   };
 
   // || "New Trailer" || "Teaser Trailer" <Youtube videoId={trailer.key} />;

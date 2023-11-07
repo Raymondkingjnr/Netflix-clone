@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import movieLogo from "../../assets/strenger.png";
 import { styled } from "styled-components";
 import { FaPlay } from "react-icons/fa";
 import { AiOutlineInfoCircle } from "react-icons/ai";
@@ -9,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchMovies, getGenres } from "../../feature/moviesSlice";
 import { Slider } from "../../components";
+import { MOVIE_URL } from "../../utils/constant";
 
 function Home() {
   const navigate = useNavigate();
@@ -36,16 +36,24 @@ function Home() {
     if (genresLoading) dispatch(fetchMovies({ genres, type: "all" }));
   }, [genresLoading]);
 
-  // console.log(movies);
+  const singleMovie = movies[0];
+  console.log(singleMovie);
 
   return (
     <Wrapper>
-      <div className="home">
+      <div
+        className="home"
+        style={{
+          backgroundImage: `linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)), url(${MOVIE_URL}${singleMovie?.image})`,
+          backgroundPosition: "center",
+          objectFit: "contain",
+        }}
+      >
         <Navbar isScrolled={isScrolled} />
 
         <div className="container">
           <div className="logo">
-            <img src={movieLogo} alt="" />
+            <h1>{singleMovie?.name}</h1>
           </div>
 
           <div className="flex buttons">
@@ -68,15 +76,16 @@ function Home() {
 
 const Wrapper = styled.section`
   width: 100vw;
+  h1 {
+    font-size: 3.5rem;
+    color: #fff;
+  }
   background: #000;
   .container {
     position: absolute;
     bottom: 10%;
     /* z-index: 1; */
-    .logo {
-      width: 100%;
-      /* margin-left: 1rem; */
-    }
+    margin-left: 2.5rem;
   }
   .buttons {
     margin-top: 2rem;
@@ -84,7 +93,7 @@ const Wrapper = styled.section`
     button {
       font-size: 1.4rem;
       gap: 1rem;
-      border-radius: 0%.2rem;
+      border-radius: 0.2rem;
       font-family: "acme";
       padding: 0.5rem;
       padding-left: 2rem;
@@ -94,6 +103,7 @@ const Wrapper = styled.section`
       background: red;
     }
   }
+
   @media screen and (max-width: 600px) {
     .container {
       .logo {
