@@ -77,7 +77,7 @@ function Home() {
 const Wrapper = styled.section`
   width: 100vw;
   h1 {
-    font-size: 3.5rem;
+    font-size: 3rem;
     color: #fff;
   }
   background: #000;
@@ -112,6 +112,9 @@ const Wrapper = styled.section`
       .logo img {
         width: 350px;
         margin-left: 0;
+      }
+      h1 {
+        font-size: 1.2rem;
       }
     }
 

@@ -69,7 +69,7 @@ const Wrapper = styled.section`
 
   h1 {
     color: #fff;
-    font-size: 25px;
+    font-size: 2.5rem;
     margin-left: 20px;
   }
   .wrapper {
@@ -112,6 +112,11 @@ const Wrapper = styled.section`
   }
   .right {
     right: 0;
+  }
+  @media screen and (max-width: 650px) {
+    h1 {
+      font-size: 1.2rem;
+    }
   }
 `;
 

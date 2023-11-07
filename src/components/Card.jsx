@@ -218,6 +218,9 @@ const Wrapper = styled.section`
     width: 150px;
     border: 5px;
   }
+  h1 {
+    font-size: 1.2rem;
+  }
   img {
     width: 20%;
     height: 20%;
