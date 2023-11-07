@@ -106,16 +106,10 @@ const Wrapper = styled.section`
 
   @media screen and (max-width: 600px) {
     .container {
-      .logo {
-        margin-left: 0;
-      }
-      .logo img {
-        width: 350px;
-        margin-left: 0;
-      }
-      h1 {
-        font-size: 1.2rem;
-      }
+      margin-left: 0;
+    }
+    h1 {
+      font-size: 1.2rem;
     }
 
     .buttons {
